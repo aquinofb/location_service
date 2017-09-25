@@ -53,7 +53,7 @@ func OrganisationsByPostcode(organisationType, postcode string) []models.Locatio
 
   var locations []models.Location
   for _, entry := range result.Entries {
-    location := 
+    location :=
       models.Location{
         Id: extractOrganisationIdFromUrl(entry.Id),
         Name: entry.Name,

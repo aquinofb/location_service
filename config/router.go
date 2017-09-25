@@ -9,7 +9,7 @@ func Router() *gin.Engine {
   // gin.SetMode(gin.ReleaseMode)
 
   router := gin.Default()
-  
+
   router.GET("/", controllers.HomeIndex)
 
   api := router.Group("/api")

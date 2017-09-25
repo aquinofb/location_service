@@ -1,7 +1,6 @@
 package clients
 
 import (
-  "fmt"
   "github.com/aquinofb/location_service/clients/nhs"
   "github.com/aquinofb/location_service/clients/google"
 
