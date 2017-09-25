@@ -1,22 +1,22 @@
 package config
 
 import (
-  "github.com/gin-gonic/gin"
-  "github.com/aquinofb/location_service/controllers"
+	"github.com/aquinofb/location_service/controllers"
+	"github.com/gin-gonic/gin"
 )
 
 func Router() *gin.Engine {
-  // gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 
-  router := gin.Default()
+	router := gin.Default()
 
-  router.GET("/", controllers.HomeIndex)
+	router.GET("/", controllers.HomeIndex)
 
-  api := router.Group("/api")
-  {
-    api.GET("/places", controllers.PlacesIndex)
-    api.GET("/places/:reference", controllers.HomeShow)
-  }
+	api := router.Group("/api")
+	{
+		api.GET("/places", controllers.PlacesIndex)
+		api.GET("/places/:reference", controllers.HomeShow)
+	}
 
-  return router
+	return router
 }
