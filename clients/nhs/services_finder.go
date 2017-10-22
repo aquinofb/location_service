@@ -34,7 +34,7 @@ type ResultPostcodeXML struct {
 }
 
 func ServicesFinder(serviceType, serviceId string) models.Location {
-	data := http_client.Get(buildNHSServicesUri(serviceType, serviceId))
+	data, _ := http_client.Get(buildNHSServicesUri(serviceType, serviceId))
 
 	result := Result{}
 	if err := xml.Unmarshal(data, &result); err != nil {
@@ -52,21 +52,22 @@ func ServicesFinder(serviceType, serviceId string) models.Location {
 	}
 }
 
-func ServicesByPostcode(serviceType, postcode string) []models.Location {
-	data := http_client.Get(buildNHSServicesPostcodeUri(serviceType, postcode))
+func ServicesByPostcode(serviceType, postcode string) ([]models.Location, error) {
+	data, _ := http_client.Get(buildNHSServicesPostcodeUri(serviceType, postcode))
 
 	result := ResultPostcodeXML{}
 	if err := xml.Unmarshal(data, &result); err != nil {
-		fmt.Printf("error: %v", err)
+		return nil, err
 	}
 
 	var locations []models.Location
 	for _, entry := range result.Entries {
+    // use go routines here niiiiiice
 		location := ServicesFinder(serviceType, extractServiceIdFromUrl(entry.Id))
 		locations = append(locations, location)
 	}
 
-	return locations
+	return locations, nil
 }
 
 func buildNHSServicesUri(serviceType, serviceId string) string {

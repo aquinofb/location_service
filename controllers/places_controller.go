@@ -17,8 +17,15 @@ func PlacesIndex(c *gin.Context) {
 	var params QueryParams
 	c.Bind(&params)
 
-	locations := clients.LocationFinder(params.Lat, params.Lng, params.Type)
-	c.JSON(http.StatusOK, gin.H{
-		"results": locations,
-	})
+	locations, err := clients.NearbySearch(params.Lat, params.Lng, params.Type)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": err.Error(),
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"results": locations,
+		})
+	}
 }

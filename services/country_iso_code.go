@@ -3,16 +3,15 @@ package services
 import (
 	"fmt"
 	"strings"
-	// "github.com/aquinofb/location_service/http_client"
+	"github.com/aquinofb/location_service/http_client"
 )
 
 const Username = "aquinofb"
 
-func CountryIsoCode(lat, lng float32) string {
-	// data := http_client.Get(buildCountryIsoCodeUri(lat, lng, Username))
+func CountryIsoCode(lat, lng float32) (string, error) {
+	data, _ := http_client.Get(buildCountryIsoCodeUri(lat, lng, Username))
 
-	// return extratCountryIsoCode(data)
-	return "GB"
+	return extratCountryIsoCode(data), nil
 }
 
 func buildCountryIsoCodeUri(lat, lng float32, username string) string {

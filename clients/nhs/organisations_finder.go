@@ -45,7 +45,7 @@ func (entry ResultEntryXML) toLocation(id, organisationType string) models.Locat
 }
 
 func OrganisationsFinder(organisationType, organisationId string) models.Location {
-	data := http_client.Get(buildNHSOrganisationsUri(organisationType, organisationId))
+	data, _ := http_client.Get(buildNHSOrganisationsUri(organisationType, organisationId))
 
 	result := OrganisationXML{}
 	if err := xml.Unmarshal(data, &result); err != nil {
@@ -61,12 +61,12 @@ func OrganisationsFinder(organisationType, organisationId string) models.Locatio
 	}
 }
 
-func OrganisationsByPostcode(organisationType, postcode string) []models.Location {
-	data := http_client.Get(buildNHSOrganisationsPostcodeUri(organisationType, postcode))
+func OrganisationsByPostcode(organisationType, postcode string) ([]models.Location, error) {
+	data, _ := http_client.Get(buildNHSOrganisationsPostcodeUri(organisationType, postcode))
 
 	result := ResultFromPostcodeXML{}
 	if err := xml.Unmarshal(data, &result); err != nil {
-		fmt.Printf("error: %v", err)
+		return nil, err
 	}
 
 	var locations []models.Location
@@ -79,7 +79,7 @@ func OrganisationsByPostcode(organisationType, postcode string) []models.Locatio
 		locations = append(locations, location)
 	}
 
-	return locations
+	return locations, nil
 }
 
 func buildNHSOrganisationsUri(organisationType, organisationId string) string {

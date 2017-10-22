@@ -7,12 +7,24 @@ import (
 	"strings"
 )
 
-func Postcode(lat, lng float32) string {
-	data := http_client.Get(buildPostcodeUri(lat, lng))
+type NotFoundError struct {
+  Message string
+}
+
+func (e NotFoundError) Error() string {
+  return e.Message
+}
+
+func PostcodeIO(lat, lng float32) (string, error) {
+	data, _ := http_client.Get(buildPostcodeUri(999.99, 999.99))
 
 	postcode := extractPostcode(data)
 
-	return removeWhiteSpaces(postcode)
+	if len(postcode) == 0 {
+		return "", &NotFoundError{"Postcode not found"}
+	}
+
+	return removeWhiteSpaces(postcode), nil
 }
 
 func buildPostcodeUri(lat, lng float32) string {

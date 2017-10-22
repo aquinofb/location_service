@@ -44,12 +44,12 @@ func LocationDetails(reference string) models.Location {
 	return models.Location{}
 }
 
-func LocationFinder(lat, lng float32, locationType string) []models.Location {
-	data := http_client.Get(nearbySearchURI(lat, lng, mapTypes[locationType]))
+func NearbySearch(lat, lng float32, locationType string) ([]models.Location, error) {
+	data, _ := http_client.Get(nearbySearchURI(lat, lng, mapTypes[locationType]))
 
 	result := Result{}
 	if err := json.Unmarshal(data, &result); err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	var locations []models.Location
@@ -57,7 +57,7 @@ func LocationFinder(lat, lng float32, locationType string) []models.Location {
 		locations = append(locations, place.toLocation(locationType))
 	}
 
-	return locations
+	return locations, nil
 }
 
 func nearbySearchURI(lat, lng float32, locationType string) string {
